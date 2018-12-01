@@ -150,10 +150,41 @@ class RootViewController : UITableViewController
         //let dictionary = object as [String: Any]
            cell!.textLabel!.text = (object["description"] as? String)!
         }
-        //print("table " + (obj["description"] as? String)!)
+        
         // This adds the arrow to the right hand side.
         cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         
         return cell!
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
+        let alert = UIAlertController(title: "Alert", message: "This is an alert.", preferredStyle: .alert)
+        alert.title = "T-Shirt Detail"
+        
+        // Configure the cell to show the data.
+        let obj = dataRows[indexPath.row]
+        if let object = obj as? [String: Any] {
+            //let dictionary = object as [String: Any]
+            alert.message = ("Description: "+(object["description"] as? String)!)
+            alert.message?.append("\n")
+            alert.message?.append("Product code: "+(object["productCode"] as? String)!)
+            alert.message?.append("\n")
+            alert.message?.append("Size: "+(object["size"] as? String)!)
+            alert.message?.append("\n")
+            alert.message?.append("Count: "+(object["count"] as? String)!)
+        }
+        
+        
+        let action1 = UIAlertAction(title: "Order", style: .default) { (action:UIAlertAction) in
+            print("You've pressed default");
+        }
+        let action2 = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
+            print("You've pressed default");
+        }
+        alert.addAction(action2)
+        alert.addAction(action1)
+
+        self.present(alert, animated: true, completion: nil)
+    }
+
 }
