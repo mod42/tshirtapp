@@ -29,7 +29,7 @@ import SalesforceSwiftSDK
 import PromiseKit
 class RootViewController : UITableViewController
 {
-    var dataRows = [String: Any]()
+    var dataRows = [Any]()
     
     // MARK: - View lifecycle
     override func loadView()
@@ -61,6 +61,8 @@ class RootViewController : UITableViewController
             do{
                 let myJson = try JSONSerialization.jsonObject(with: mydata!, options: .allowFragments)
                 if let array = myJson as? [Any] {
+                    self.dataRows = array
+                    print("length \(array.count)")
                     if let firstObject = array.first {
                         // access individual object in array
                         if let dictionary = firstObject as? [String: Any] {
@@ -71,7 +73,7 @@ class RootViewController : UITableViewController
                                 print(dictionary)
                                 //print("count \((dictionary["count"] as? Decimal)!)")
                             //}
-                           self.dataRows = (firstObject as? [String: Any])!
+                           //self.dataRows = (firstObject as? [String: Any])!
                             DispatchQueue.main.async(execute: {
                                               self.tableView.reloadData()
                                          })
@@ -124,7 +126,7 @@ class RootViewController : UITableViewController
     override func tableView(_ tableView: UITableView?, numberOfRowsInSection section: Int) -> Int
     {
         //return self.dataRows.count
-        return 1
+        return self.dataRows.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -143,9 +145,11 @@ class RootViewController : UITableViewController
         cell!.imageView!.image = image
         
         // Configure the cell to show the data.
-        //let obj = dataRows[indexPath.row]
-        let obj = dataRows
-        cell!.textLabel!.text = (obj["description"] as? String)
+        let obj = dataRows[indexPath.row]
+        if let object = obj as? [String: Any] {
+        //let dictionary = object as [String: Any]
+           cell!.textLabel!.text = (object["description"] as? String)!
+        }
         //print("table " + (obj["description"] as? String)!)
         // This adds the arrow to the right hand side.
         cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
