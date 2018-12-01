@@ -29,7 +29,7 @@ import SalesforceSwiftSDK
 import PromiseKit
 class RootViewController : UITableViewController
 {
-    var dataRows = [NSDictionary]()
+    var dataRows = [String: Any]()
     
     // MARK: - View lifecycle
     override func loadView()
@@ -67,11 +67,14 @@ class RootViewController : UITableViewController
                             //if let dict = dictionary["description"] as? String {
                                 // access individual value in dictionary
                                 print("Description" + (dictionary["description"] as? String)!)
-                            print("count \((describing: dictionary["count"])")
+                                print("count "+(dictionary["count"] as? String)!)
                                 print(dictionary)
                                 //print("count \((dictionary["count"] as? Decimal)!)")
                             //}
-                            
+                           self.dataRows = (firstObject as? [String: Any])!
+                            DispatchQueue.main.async(execute: {
+                                              self.tableView.reloadData()
+                                         })
                             for (key, value) in dictionary {
                                 // access all key / value pairs in dictionary
                             }
@@ -79,6 +82,7 @@ class RootViewController : UITableViewController
                             if let nestedDictionary = dictionary["anotherKey"] as? [String: Any] {
                                 // access nested dictionary values by key
                             }
+                            
                         }
                     }
                     
@@ -105,8 +109,10 @@ class RootViewController : UITableViewController
                    print ("Sh*&^%$ Did not work")
                 }
             }
+
         })
         task.resume()
+
     }
     
     // MARK: - Table view data source
@@ -117,7 +123,8 @@ class RootViewController : UITableViewController
     
     override func tableView(_ tableView: UITableView?, numberOfRowsInSection section: Int) -> Int
     {
-        return self.dataRows.count
+        //return self.dataRows.count
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -136,9 +143,10 @@ class RootViewController : UITableViewController
         cell!.imageView!.image = image
         
         // Configure the cell to show the data.
-        let obj = dataRows[indexPath.row]
-        cell!.textLabel!.text = obj["description"] as? String
-        
+        //let obj = dataRows[indexPath.row]
+        let obj = dataRows
+        cell!.textLabel!.text = (obj["description"] as? String)
+        //print("table " + (obj["description"] as? String)!)
         // This adds the arrow to the right hand side.
         cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         
